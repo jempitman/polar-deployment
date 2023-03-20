@@ -37,6 +37,7 @@ services:
       - polar-keycloak
     image: "order-service"
     container_name: "order-service"
+    platform: linux/amd64
     ports:
       - 9002:9002
       - 8002:8002
@@ -62,6 +63,7 @@ services:
       - polar-rabbitmq
     image: "dispatcher-service"
     container_name: dispatcher-service
+    platform: linux/amd64
     ports:
       - 9003:9003
       - 8003:8003
@@ -84,6 +86,7 @@ services:
       - polar-ui
     image: "edge-service"
     container_name: "edge-service"
+    platform: linux/amd64
     ports:
       - 9000:9000
       - 8000:8000
@@ -107,6 +110,7 @@ services:
       - fluent-bit
     image: "config-service"
     container_name: "config-service"
+    platform: linux/amd64
     ports:
       - 8888:8888
       - 9888:9888
@@ -126,6 +130,7 @@ services:
       - fluent-bit
     image: "ghcr.io/polarbookshop/polar-ui:v1"
     container_name: "polar-ui"
+    platform: linux/amd64
     ports:
       - 9004:9004
     environment:
