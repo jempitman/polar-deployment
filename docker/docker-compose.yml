@@ -111,12 +111,12 @@ services:
       - OTEL_SERVICE_NAME=edge-service
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://tempo:4317
       - OTEL_METRICS_EXPORTER=none
-      - CATALOG_SERVICE_URI=http://catalog-service:9001
-      - ORDER_SERVICE_URI=http://order-service:9002
-      - SAP_URL=http://polar-ui:9004
+      - CATALOG_SERVICE_URL=http://catalog-service:9001
+      - ORDER_SERVICE_URL=http://order-service:9002
+      - SPA_URL=http://polar-ui:9004
       - SPRING_CLOUD_CONFIG_URI=http://config-service:8888
       - SPRING_REDIS_HOST=polar-redis
-      - SPRING_SECURITY_OAUTH2_PROVIDER_KEYCLOAK_ISSUER_URI=http://host.docker.io:8080/realms/PolarBookshop
+      - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_KEYCLOAK_ISSUER_URI=http://host.docker.internal:8080/realms/PolarBookshop
     logging:
       driver: fluentd
       options:
@@ -156,10 +156,6 @@ services:
       - 9004:9004
     environment:
       - PORT=9004
-      - JAVA_TOOL_OPTIONS=-javaagent:/workspace/BOOT-INF/lib/opentelemetry-javaagent-1.17.0.jar
-      - OTEL_SERVICE_NAME=polar-ui
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://tempo:4317
-      - OTEL_METRICS_EXPORTER=none
     logging:
       driver: fluentd
       options:
@@ -207,21 +203,22 @@ services:
 
 #Observability stack
   grafana:
-      image: grafana/grafana:9.1.2
-      container_name: grafana
-      depends_on:
-        - loki
-        - prometheus
-        - tempo
-      ports:
-        - "3000:3000"
-      environment:
-        - GF_SECURITY_ADMIN_USER=user
-        - GF_SECURITY_ADMIN_PASSWORD=password
-      volumes:
-        - ./observability/grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
-        - ./observability/grafana/dashboards:/etc/grafana/provisioning/dashboards
-        - ./observability/grafana/grafana.ini:/etc/grafana/grafana.ini
+    image: grafana/grafana:9.1.2
+    container_name: grafana
+    depends_on:
+      - loki
+      - prometheus
+      - tempo
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=user
+      - GF_SECURITY_ADMIN_PASSWORD=password
+    volumes:
+      - ./observability/grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
+      - ./observability/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./observability/grafana/grafana.ini:/etc/grafana/grafana.ini
+
   loki:
     image: grafana/loki:2.6.1
     container_name: loki
@@ -254,6 +251,7 @@ services:
     container_name: tempo
     command: -config.file /etc/tempo-config.yml
     ports:
+      - "3110:3100"
       - "4317:4317"
     volumes:
       - ./observability/tempo/tempo.yml:/etc/tempo-config.yml
