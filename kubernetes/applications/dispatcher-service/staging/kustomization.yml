@@ -4,15 +4,18 @@ kind: Kustomization
 resources:
   - github.com/jempitman/dispatcher-service/k8s?ref=main
 
+patchesStrategicMerge:
+  - patch-env.yml
+
 configMapGenerator:
   - behavior: merge
     files:
       - application-staging.yml
-    name: dispatcher-service
+    name: dispatcher-config
 
 images:
   - name: dispatcher-service
-    newName: ghcr.io/jempitmqn/dispatcher-service
+    newName: ghcr.io/jempitman/dispatcher-service
     newTag: latest
 
 replicas:
