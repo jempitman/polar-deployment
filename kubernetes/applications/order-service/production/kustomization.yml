@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - github.com/jempitman/order-service/k8s?ref=00da77e59b0e3e15e9160f79405f4db47bb7bdeb
+
+patchesStrategicMerge:
+  - patch-env.yml
+  - patch-resources.yml
+  - patch-volumes.yml
+
+configMapGenerator:
+  - behavior: merge
+    files:
+      - application-prod.yml
+    name: order-config
+
+images:
+  - name: order-service
+    newName: ghcr.io/jempitman/order-service
+    newTag: 00da77e59b0e3e15e9160f79405f4db47bb7bdeb
+
+replicas:
+  - name: order-service
+    count: 1
