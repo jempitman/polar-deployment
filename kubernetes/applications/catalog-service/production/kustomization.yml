@@ -18,7 +18,7 @@ configMapGenerator:
 images:
 - name: catalog-service
   newName: ghcr.io/jempitman/catalog-service
-  newTag: 6d3cecb08ed662899aa68b3f7f31a7fdb3b6fc41
+  newTag: 19eb0a0306c7ba5ec3d642ccafeb507ff8cfb23f
 
 replicas:
 - count: 2
